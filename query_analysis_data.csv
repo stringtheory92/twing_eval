@@ -1,0 +1,248 @@
+query_text,tables,select_columns,join_columns,where_columns,agg_columns
+"SELECT agg_daily.ymd, brand_category.name, SUM(agg_daily.conversions) * 1.0 / SUM(agg_daily.clicks) AS conversion_rate FROM agg_daily JOIN creative ON agg_daily.brand_id = creative.brand_id JOIN brand ON creative.brand_id = brand.id JOIN brand_category ON brand.brand_category_id = brand_category.id GROUP BY agg_daily.ymd, brand_category.name;","[""catalog.public.agg_daily as agg_daily"", ""catalog.public.brand_category as brand_category"", ""catalog.public.creative as creative"", ""catalog.public.brand as brand""]","[""agg_daily.clicks"", ""agg_daily.conversions"", ""agg_daily.ymd"", ""brand_category.name""]","[""agg_daily.brand_id"", ""brand.brand_category_id"", ""brand.id"", ""brand_category.id"", ""creative.brand_id""]",,"[""agg_daily.ymd"", ""brand_category.name""]"
+"SELECT hour, SUM(impressions) AS total_impressions, SUM(clicks) AS total_clicks FROM agg_hourly WHERE ymd = '2024-02-16' GROUP BY hour;","[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.clicks"", ""agg_hourly.hour"", ""agg_hourly.impressions""]",,"[""agg_hourly.ymd""]","[""agg_hourly.hour""]"
+"SELECT b.name AS browser_name, COUNT(click.ad_request_id) * 1.0 / COUNT(DISTINCT ar.ad_request_id) AS ctr FROM ad_request ar JOIN ad_click click ON ar.ad_request_id = click.ad_request_id JOIN browser b ON ar.browser_id = b.id GROUP BY b.name;","[""catalog.public.ad_click as click"", ""catalog.public.browser as b"", ""catalog.public.ad_request as ar""]","[""ar.ad_request_id"", ""b.name"", ""click.ad_request_id""]","[""ar.ad_request_id"", ""ar.browser_id"", ""b.id"", ""click.ad_request_id""]",,"[""b.name""]"
+"SELECT ymd, SUM(impressions) AS total_impressions, SUM(clicks) AS total_clicks FROM public.agg_daily GROUP BY ymd;","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.clicks"", ""agg_daily.impressions"", ""agg_daily.ymd""]",,,"[""agg_daily.ymd""]"
+"SELECT brw.name, AVG(b.clicks) AS avg_clicks FROM public.agg_hourly b JOIN public.browser brw ON b.browser_id = brw.id GROUP BY brw.name;","[""catalog.public.browser as brw"", ""catalog.public.agg_hourly as b""]","[""b.clicks"", ""brw.name""]","[""b.browser_id"", ""brw.id""]",,"[""brw.name""]"
+"SELECT br.name AS brand_name, SUM(b.views) AS total_views, SUM(b.conversions) AS total_conversions FROM public.agg_daily b JOIN public.brand br ON b.brand_id = br.id GROUP BY br.name;","[""catalog.public.brand as br"", ""catalog.public.agg_daily as b""]","[""b.conversions"", ""b.views"", ""br.name""]","[""b.brand_id"", ""br.id""]",,"[""br.name""]"
+"SELECT os.name, COUNT(b.conversions) AS conversion_count FROM public.agg_daily b JOIN public.operating_system os ON b.os_id = os.id WHERE b.conversions > 0 GROUP BY os.name;","[""catalog.public.operating_system as os"", ""catalog.public.agg_daily as b""]","[""b.conversions"", ""os.name""]","[""b.os_id"", ""os.id""]","[""b.conversions""]","[""os.name""]"
+"SELECT b.ymd, br.name, AVG(b.clicks) AS avg_clicks FROM public.agg_daily b JOIN public.brand br ON b.brand_id = br.id GROUP BY b.ymd, br.name;","[""catalog.public.brand as br"", ""catalog.public.agg_daily as b""]","[""b.clicks"", ""b.ymd"", ""br.name""]","[""b.brand_id"", ""br.id""]",,"[""b.ymd"", ""br.name""]"
+"SELECT ymd, brand_id, MAX(impressions) AS max_impressions FROM public.agg_daily GROUP BY ymd, brand_id;","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.brand_id"", ""agg_daily.impressions"", ""agg_daily.ymd""]",,,"[""agg_daily.brand_id"", ""agg_daily.ymd""]"
+"SELECT os.name, SUM(b.spend) AS total_spend FROM public.agg_daily b JOIN public.operating_system os ON b.os_id = os.id GROUP BY os.name;","[""catalog.public.operating_system as os"", ""catalog.public.agg_daily as b""]","[""b.spend"", ""os.name""]","[""b.os_id"", ""os.id""]",,"[""os.name""]"
+"SELECT ymd, SUM(impressions) AS total_impressions FROM public.agg_monthly GROUP BY ymd;","[""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.impressions"", ""agg_monthly.ymd""]",,,"[""agg_monthly.ymd""]"
+"SELECT brand_id, COUNT(*) AS count_conversions FROM public.agg_daily WHERE conversions > 0 GROUP BY brand_id;","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.brand_id""]",,"[""agg_daily.conversions""]","[""agg_daily.brand_id""]"
+"SELECT br.name, c.name, AVG(b.impressions) AS avg_impressions FROM public.agg_daily b JOIN public.brand br ON b.brand_id = br.id JOIN public.city c ON b.city_id = c.id LEFT JOIN public.operating_system os on b.os_id = os.id GROUP BY br.name, c.name;","[""catalog.public.brand as br"", ""catalog.public.agg_daily as b"", ""catalog.public.operating_system as os"", ""catalog.public.city as c""]","[""b.impressions"", ""br.name"", ""c.name""]","[""b.brand_id"", ""b.city_id"", ""b.os_id"", ""br.id"", ""c.id"", ""os.id""]",,"[""br.name"", ""c.name""]"
+"SELECT br.name, c.name, AVG(b.impressions) AS avg_impressions FROM public.agg_daily b JOIN public.brand br ON b.brand_id = br.id JOIN public.city c ON b.city_id = c.id GROUP BY br.name, c.name;","[""catalog.public.brand as br"", ""catalog.public.agg_daily as b"", ""catalog.public.city as c""]","[""b.impressions"", ""br.name"", ""c.name""]","[""b.brand_id"", ""b.city_id"", ""br.id"", ""c.id""]",,"[""br.name"", ""c.name""]"
+"SELECT b.ymd, MAX(b.views) AS max_views FROM public.agg_monthly b GROUP BY b.ymd ORDER BY max_views DESC;","[""catalog.public.agg_monthly as b""]","[""b.views"", ""b.ymd""]",,,"[""b.ymd""]"
+"SELECT r.name AS region_name, SUM(b.impressions) AS total_impressions, SUM(b.spend) AS total_spend FROM public.agg_monthly b JOIN public.region r ON b.region_id = r.id GROUP BY r.name;","[""catalog.public.agg_monthly as b"", ""catalog.public.region as r""]","[""b.impressions"", ""b.spend"", ""r.name""]","[""b.region_id"", ""r.id""]",,"[""r.name""]"
+"SELECT c.name, os.name, COUNT(*) AS count FROM public.agg_daily b JOIN public.city c ON b.city_id = c.id JOIN public.operating_system os ON b.os_id = os.id GROUP BY c.name, os.name;","[""catalog.public.city as c"", ""catalog.public.agg_daily as b"", ""catalog.public.operating_system as os""]","[""c.name"", ""os.name""]","[""b.city_id"", ""b.os_id"", ""c.id"", ""os.id""]",,"[""c.name"", ""os.name""]"
+"SELECT b.ymd, SUM(b.conversions) AS total_conversions, AVG(b.spend) AS avg_spend FROM public.agg_monthly b GROUP BY b.ymd;","[""catalog.public.agg_monthly as b""]","[""b.conversions"", ""b.spend"", ""b.ymd""]",,,"[""b.ymd""]"
+"SELECT c.name AS city_name, brw.name AS browser_name, SUM(b.views) AS total_views FROM public.agg_hourly b JOIN public.city c ON b.city_id = c.id JOIN public.browser brw ON b.browser_id = brw.id GROUP BY c.name, brw.name;","[""catalog.public.agg_hourly as b"", ""catalog.public.city as c"", ""catalog.public.browser as brw""]","[""b.views"", ""brw.name"", ""c.name""]","[""b.browser_id"", ""b.city_id"", ""brw.id"", ""c.id""]",,"[""brw.name"", ""c.name""]"
+"SELECT r.name, SUM(b.views) AS total_views FROM public.agg_daily b JOIN public.region r ON b.region_id = r.id GROUP BY r.name;","[""catalog.public.region as r"", ""catalog.public.agg_daily as b""]","[""b.views"", ""r.name""]","[""b.region_id"", ""r.id""]",,"[""r.name""]"
+"SELECT b.ymd, c.name, SUM(b.clicks) AS total_clicks FROM public.agg_monthly b JOIN public.city c ON b.city_id = c.id GROUP BY b.ymd, c.name;","[""catalog.public.agg_monthly as b"", ""catalog.public.city as c""]","[""b.clicks"", ""b.ymd"", ""c.name""]","[""b.city_id"", ""c.id""]",,"[""b.ymd"", ""c.name""]"
+"SELECT b.ymd, br.name as brand_name, br.name as category, AVG(b.clicks) AS avg_clicks FROM public.agg_daily b JOIN public.brand br ON b.brand_id = br.id JOIN public.brand_category bc ON bc.id = br.brand_category_id GROUP BY b.ymd, br.name, bc.name;","[""catalog.public.agg_daily as b"", ""catalog.public.brand_category as bc"", ""catalog.public.brand as br""]","[""b.clicks"", ""b.ymd"", ""br.name""]","[""b.brand_id"", ""bc.id"", ""br.brand_category_id"", ""br.id""]",,"[""b.ymd"", ""bc.name"", ""br.name""]"
+"SELECT b.ymd, br.name AS brand_name, SUM(b.spend) AS total_spend FROM public.agg_daily b JOIN public.brand br ON b.brand_id = br.id GROUP BY b.ymd, br.name ORDER BY b.ymd, br.name;","[""catalog.public.agg_daily as b"", ""catalog.public.brand as br""]","[""b.spend"", ""b.ymd"", ""br.name""]","[""b.brand_id"", ""br.id""]",,"[""b.ymd"", ""br.name""]"
+"SELECT region_id, AVG(clicks) AS avg_clicks FROM public.agg_hourly GROUP BY region_id;","[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.clicks"", ""agg_hourly.region_id""]",,,"[""agg_hourly.region_id""]"
+"SELECT ymd, SUM(spend) AS total_spend FROM public.agg_monthly GROUP BY ymd ORDER BY ymd DESC;","[""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.spend"", ""agg_monthly.ymd""]",,,"[""agg_monthly.ymd""]"
+"SELECT b.ymd, COUNT(b.conversions) AS conversion_count FROM public.agg_hourly b GROUP BY b.ymd;","[""catalog.public.agg_hourly as b""]","[""b.conversions"", ""b.ymd""]",,,"[""b.ymd""]"
+"SELECT region_id, SUM(views) AS total_views, SUM(conversions) AS total_conversions FROM public.agg_hourly GROUP BY region_id;","[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.conversions"", ""agg_hourly.region_id"", ""agg_hourly.views""]",,,"[""agg_hourly.region_id""]"
+"SELECT br.name, SUM(b.impressions) AS total_impressions FROM public.agg_daily b JOIN public.browser br ON b.browser_id = br.id GROUP BY br.name;","[""catalog.public.browser as br"", ""catalog.public.agg_daily as b""]","[""b.impressions"", ""br.name""]","[""b.browser_id"", ""br.id""]",,"[""br.name""]"
+"SELECT c.name AS city_name, SUM(b.conversions) AS total_conversions FROM public.agg_hourly b JOIN public.city c ON b.city_id = c.id GROUP BY c.name ORDER BY total_conversions DESC LIMIT 5;","[""catalog.public.agg_hourly as b"", ""catalog.public.city as c""]","[""b.conversions"", ""c.name""]","[""b.city_id"", ""c.id""]",,"[""c.name""]"
+"SELECT srt.ymd, reg.name as region_name, SUM(srt.clicks) / SUM(srt.impressions) AS click_through_rate FROM public.agg_daily srt JOIN public.region reg ON srt.region_id = reg.id GROUP BY srt.ymd, reg.name;","[""catalog.public.agg_daily as srt"", ""catalog.public.region as reg""]","[""reg.name"", ""srt.clicks"", ""srt.impressions"", ""srt.ymd""]","[""reg.id"", ""srt.region_id""]",,"[""reg.name"", ""srt.ymd""]"
+"SELECT srt.ymd, r.name AS region_name, br.name AS brand_name, SUM(srt.views) AS total_views FROM public.agg_daily srt JOIN public.region r ON srt.region_id = r.id JOIN public.brand br ON srt.brand_id = br.id GROUP BY srt.ymd, r.name, br.name;","[""catalog.public.region as r"", ""catalog.public.agg_daily as srt"", ""catalog.public.brand as br""]","[""br.name"", ""r.name"", ""srt.views"", ""srt.ymd""]","[""br.id"", ""r.id"", ""srt.brand_id"", ""srt.region_id""]",,"[""br.name"", ""r.name"", ""srt.ymd""]"
+"SELECT srt.ymd, b.name AS brand_name, r.name AS region_name, AVG(srt.conversions) AS avg_conversions FROM public.agg_hourly srt JOIN public.brand b ON srt.brand_id = b.id JOIN public.region r ON srt.region_id = r.id GROUP BY srt.ymd, b.name, r.name;","[""catalog.public.brand as b"", ""catalog.public.agg_hourly as srt"", ""catalog.public.region as r""]","[""b.name"", ""r.name"", ""srt.conversions"", ""srt.ymd""]","[""b.id"", ""r.id"", ""srt.brand_id"", ""srt.region_id""]",,"[""b.name"", ""r.name"", ""srt.ymd""]"
+"SELECT b.name AS brand_name, COUNT(DISTINCT srt.ymd) AS active_days FROM public.agg_hourly srt JOIN public.brand b ON srt.brand_id = b.id GROUP BY b.name","[""catalog.public.brand as b"", ""catalog.public.agg_hourly as srt""]","[""b.name"", ""srt.ymd""]","[""b.id"", ""srt.brand_id""]",,"[""b.name""]"
+"SELECT ymd, SUM(spend), SUM(views) FROM public.agg_monthly GROUP BY ymd HAVING SUM(spend) > 1000;","[""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.spend"", ""agg_monthly.views"", ""agg_monthly.ymd""]",,,"[""agg_monthly.ymd""]"
+"SELECT brand_id, SUM(clicks) / SUM(impressions) AS click_through_rate FROM public.agg_hourly GROUP BY brand_id;","[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.brand_id"", ""agg_hourly.clicks"", ""agg_hourly.impressions""]",,,"[""agg_hourly.brand_id""]"
+"SELECT region_id, AVG(spend) AS avg_spend, AVG(views) AS avg_views FROM public.agg_daily GROUP BY region_id;","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.region_id"", ""agg_daily.spend"", ""agg_daily.views""]",,,"[""agg_daily.region_id""]"
+"SELECT ymd, COUNT(DISTINCT brand_id) AS unique_brands FROM public.agg_monthly GROUP BY ymd;","[""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.brand_id"", ""agg_monthly.ymd""]",,,"[""agg_monthly.ymd""]"
+"SELECT ymd, COUNT(DISTINCT brand_id) AS unique_brands FROM public.agg_daily GROUP BY ymd;","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.brand_id"", ""agg_daily.ymd""]",,,"[""agg_daily.ymd""]"
+"SELECT ymd, COUNT(DISTINCT brand_id) AS unique_brands FROM public.agg_hourly GROUP BY ymd;","[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.brand_id"", ""agg_hourly.ymd""]",,,"[""agg_hourly.ymd""]"
+"SELECT srt.ymd, r.name, SUM(srt.impressions) FROM public.agg_daily srt JOIN public.region r ON srt.region_id = r.id GROUP BY srt.ymd, r.name;","[""catalog.public.agg_daily as srt"", ""catalog.public.region as r""]","[""r.name"", ""srt.impressions"", ""srt.ymd""]","[""r.id"", ""srt.region_id""]",,"[""r.name"", ""srt.ymd""]"
+"SELECT b.name, AVG(srt.clicks) AS avg_clicks FROM public.agg_hourly srt JOIN public.brand b ON srt.brand_id = b.id GROUP BY b.name;","[""catalog.public.brand as b"", ""catalog.public.agg_hourly as srt""]","[""b.name"", ""srt.clicks""]","[""b.id"", ""srt.brand_id""]",,"[""b.name""]"
+"SELECT r.name AS region_name, AVG(srt.spend) AS avg_spend FROM public.agg_daily srt JOIN public.region r ON srt.region_id = r.id GROUP BY r.name;","[""catalog.public.agg_daily as srt"", ""catalog.public.region as r""]","[""r.name"", ""srt.spend""]","[""r.id"", ""srt.region_id""]",,"[""r.name""]"
+"SELECT srt.ymd, b.name AS brand_name, SUM(srt.spend) AS total_spend FROM public.agg_monthly srt JOIN public.brand b ON srt.brand_id = b.id GROUP BY srt.ymd, b.name;","[""catalog.public.agg_monthly as srt"", ""catalog.public.brand as b""]","[""b.name"", ""srt.spend"", ""srt.ymd""]","[""b.id"", ""srt.brand_id""]",,"[""b.name"", ""srt.ymd""]"
+"SELECT
+          srt.ymd,
+          SUM(CASE WHEN srt.brand_id = A.id THEN srt.impressions ELSE 0 END) AS A_impressions,
+          SUM(CASE WHEN srt.brand_id = B.id THEN srt.impressions ELSE 0 END) AS B_impressions,
+          SUM(CASE WHEN srt.brand_id = C.id THEN srt.impressions ELSE 0 END) AS C_impressions,
+          SUM(CASE WHEN srt.brand_id IN (A.id, B.id, C.id) THEN srt.clicks ELSE 0 END) AS total_clicks,
+          SUM(CASE WHEN srt.brand_id IN (A.id, B.id, C.id) THEN srt.spend ELSE 0 END) AS total_spend
+      FROM
+          public.agg_daily srt
+      LEFT JOIN
+          (SELECT id FROM public.brand WHERE name = 'A') A ON srt.brand_id = A.id
+      LEFT JOIN
+          (SELECT id FROM public.brand WHERE name = 'B') B ON srt.brand_id = B.id
+      LEFT JOIN
+          (SELECT id FROM public.brand WHERE name = 'C') C ON srt.brand_id = C.id
+      GROUP BY
+          srt.ymd
+      ORDER BY
+          srt.ymd;","[""catalog.public.brand as brand"", ""catalog.public.agg_daily as srt""]","[""brand.id"", ""srt.brand_id"", ""srt.clicks"", ""srt.impressions"", ""srt.spend"", ""srt.ymd""]","[""srt.brand_id""]","[""brand.name""]","[""srt.ymd""]"
+"SELECT b.name, SUM(srt.conversions) AS total_conversions
+  FROM public.agg_daily srt
+  JOIN public.brand b ON srt.brand_id = b.id
+  WHERE srt.conversions > (SELECT AVG(conversions) FROM public.agg_daily)
+  GROUP BY b.name;","[""catalog.public.brand as b"", ""catalog.public.agg_daily as srt"", ""catalog.public.agg_daily as agg_daily""]","[""agg_daily.conversions"", ""b.name"", ""srt.conversions""]","[""b.id"", ""srt.brand_id""]","[""srt.conversions""]","[""b.name""]"
+"SELECT ymd, sum(spend) FROM (SELECT * FROM public.agg_hourly WHERE ymd >= current_date - interval '7 days' AND hour = 9) a group by 1;","[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.brand_id"", ""agg_hourly.browser_id"", ""agg_hourly.city_id"", ""agg_hourly.clicks"", ""agg_hourly.conversions"", ""agg_hourly.cost"", ""agg_hourly.country_id"", ""agg_hourly.creative_id"", ""agg_hourly.hour"", ""agg_hourly.impressions"", ""agg_hourly.os_id"", ""agg_hourly.postal_code"", ""agg_hourly.publisher_id"", ""agg_hourly.region_id"", ""agg_hourly.spend"", ""agg_hourly.views"", ""agg_hourly.ymd""]",,"[""agg_hourly.hour"", ""agg_hourly.ymd""]",
+"COPY INTO public.region (id, name) FROM @my_stage/region.csv;","[""catalog.public.region as region""]",,,,
+"COPY INTO public.ad_request (datetime, ad_request_id, publisher_id, browser_id, os_id, country_id, city_id, region_id, postal_code ) FROM @my_stage/requests-2024-02-16-9.csv;","[""catalog.public.ad_request as ad_request""]",,,,
+"COPY INTO public.ad_win (datetime, ad_request_id, creative_id, price, cost) FROM @my_stage/wins-2024-02-16-9.csv;","[""catalog.public.ad_win as ad_win""]",,,,
+"COPY INTO public.ad_click (datetime, ad_request_id) FROM @my_stage/clicks-2024-02-16-9.csv;","[""catalog.public.ad_click as ad_click""]",,,,
+"COPY INTO public.ad_view (datetime, ad_request_id) FROM @my_stage/views-2024-02-16-9.csv;","[""catalog.public.ad_view as ad_view""]",,,,
+"COPY INTO public.ad_conversion (datetime, ad_request_id) FROM @my_stage/conversions-2024-02-16-9.csv;","[""catalog.public.ad_conversion as ad_conversion""]",,,,
+"SELECT ymd, SUM(spend) AS daily_spend FROM public.agg_monthly GROUP BY ymd ORDER BY ymd;","[""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.spend"", ""agg_monthly.ymd""]",,,"[""agg_monthly.ymd""]"
+"COPY INTO public.city (id, name) FROM @my_stage/city.csv;","[""catalog.public.city as city""]",,,,
+"SELECT os.name AS operating_system, COUNT(con.ad_request_id) * 1.0 / COUNT(DISTINCT ar.ad_request_id) AS conversion_rate FROM ad_request ar JOIN ad_conversion con ON ar.ad_request_id = con.ad_request_id JOIN operating_system os ON ar.os_id = os.id GROUP BY os.name;","[""catalog.public.ad_conversion as con"", ""catalog.public.operating_system as os"", ""catalog.public.ad_request as ar""]","[""ar.ad_request_id"", ""con.ad_request_id"", ""os.name""]","[""ar.ad_request_id"", ""ar.os_id"", ""con.ad_request_id"", ""os.id""]",,"[""os.name""]"
+"SELECT date(a.datetime), c.brand_id, SUM(a.price) AS daily_spend FROM ad_win a JOIN creative c ON a.creative_id = c.id GROUP BY date(a.datetime), c.brand_id;","[""catalog.public.ad_win as a"", ""catalog.public.creative as c""]","[""a.datetime"", ""a.price"", ""c.brand_id""]","[""a.creative_id"", ""c.id""]",,"[""a.datetime"", ""c.brand_id""]"
+"INSERT INTO public.agg_daily (ymd, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, impressions, clicks, views, conversions, spend, cost)
+        SELECT ymd, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, sum(impressions), sum(clicks), sum(views), sum(conversions), sum(spend), sum(cost)
+        FROM public.agg_hourly ah
+        WHERE ymd = '2024-02-16'
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;","[""catalog.public.agg_daily"", ""catalog.public.agg_hourly as ah""]","[""ah.brand_id"", ""ah.browser_id"", ""ah.city_id"", ""ah.clicks"", ""ah.conversions"", ""ah.cost"", ""ah.country_id"", ""ah.creative_id"", ""ah.impressions"", ""ah.os_id"", ""ah.postal_code"", ""ah.publisher_id"", ""ah.region_id"", ""ah.spend"", ""ah.views"", ""ah.ymd""]",,"[""ah.ymd""]","[""ah.brand_id"", ""ah.browser_id"", ""ah.city_id"", ""ah.country_id"", ""ah.creative_id"", ""ah.os_id"", ""ah.postal_code"", ""ah.publisher_id"", ""ah.region_id"", ""ah.ymd""]"
+"SELECT postal_code, COUNT(ad_request_id) AS request_count FROM ad_request WHERE region_id = '4' GROUP BY postal_code;","[""catalog.public.ad_request as ad_request""]","[""ad_request.ad_request_id"", ""ad_request.postal_code""]",,"[""ad_request.region_id""]","[""ad_request.postal_code""]"
+"SELECT country_id, COUNT(ad_request_id) AS total_requests FROM ad_request GROUP BY country_id;","[""catalog.public.ad_request as ad_request""]","[""ad_request.ad_request_id"", ""ad_request.country_id""]",,,"[""ad_request.country_id""]"
+"SELECT ymd, region_id, SUM(spend) AS total_spend, SUM(cost) AS total_cost FROM agg_monthly GROUP BY ymd, region_id;","[""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.cost"", ""agg_monthly.region_id"", ""agg_monthly.spend"", ""agg_monthly.ymd""]",,,"[""agg_monthly.region_id"", ""agg_monthly.ymd""]"
+"INSERT INTO public.agg_hourly (ymd, hour, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, spend, cost, impressions, clicks, views, conversions)
+        SELECT date(ac.datetime) as ymd, hour(ac.datetime) as hour, ac.publisher_id, ac.browser_id, ac.os_id, ac.postal_code, ac.city_id, ac.region_id, ac.country_id, ac.creative_id, c.brand_id, sum(ac.price), sum(ac.cost), count(1), sum(ac.click), sum(ac.view), sum(ac.conversion)
+        FROM public.ad_combined ac
+        LEFT JOIN public.creative c on ac.creative_id = c.id
+        WHERE date(ac.datetime) = '2024-02-16' and hour(ac.datetime) = 9
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11;","[""catalog.public.agg_hourly"", ""catalog.public.ad_combined as ac"", ""catalog.public.creative as c""]","[""ac.browser_id"", ""ac.city_id"", ""ac.click"", ""ac.conversion"", ""ac.cost"", ""ac.country_id"", ""ac.creative_id"", ""ac.datetime"", ""ac.os_id"", ""ac.postal_code"", ""ac.price"", ""ac.publisher_id"", ""ac.region_id"", ""ac.view"", ""c.brand_id""]","[""ac.creative_id"", ""c.id""]","[""ac.datetime""]","[""ac.browser_id"", ""ac.city_id"", ""ac.country_id"", ""ac.creative_id"", ""ac.datetime"", ""ac.os_id"", ""ac.postal_code"", ""ac.publisher_id"", ""ac.region_id"", ""c.brand_id""]"
+"SELECT c.name AS city_name, SUM(b.spend) AS total_spend FROM public.agg_daily b JOIN public.city c ON b.city_id = c.id GROUP BY c.name;","[""catalog.public.agg_daily as b"", ""catalog.public.city as c""]","[""b.spend"", ""c.name""]","[""b.city_id"", ""c.id""]",,"[""c.name""]"
+"SELECT creative_id, AVG(cost) AS avg_cost, AVG(price) AS avg_price FROM ad_win GROUP BY creative_id;","[""catalog.public.ad_win as ad_win""]","[""ad_win.cost"", ""ad_win.creative_id"", ""ad_win.price""]",,,"[""ad_win.creative_id""]"
+"SELECT city.id, city.name, sum(ad_combined.view) AS total_views FROM ad_combined JOIN city on ad_combined.city_id = city.id GROUP BY city.id, city.name ORDER BY total_views DESC LIMIT 5;","[""catalog.public.city as city"", ""catalog.public.ad_combined as ad_combined""]","[""ad_combined.view"", ""city.id"", ""city.name""]","[""ad_combined.city_id"", ""city.id""]",,"[""city.id"", ""city.name""]"
+"WITH
+      total_impressions (total) AS (
+        SELECT
+            SUM(brt.impressions)
+        FROM public.agg_daily brt
+        WHERE
+            brt.ymd >= current_date - interval '7 days'
+            AND brt.brand_id in (
+                SELECT DISTINCT id
+                FROM brand
+                WHERE name like '%abc%'
+            )
+  ),
+  region_threshold (region_id, limitation, imps) AS (
+    SELECT
+        region_id,
+        total_impressions.total * 0.001,
+        SUM(brt.impressions)
+    FROM public.agg_daily brt, total_impressions
+    WHERE
+        brt.ymd >= current_date - interval '7 days'
+        AND brt.brand_id in (
+            SELECT DISTINCT id
+            FROM brand
+            WHERE name like '%abc%'
+        )
+    GROUP BY
+        brt.region_id,
+        total_impressions.total * 0.001
+    HAVING SUM(brt.impressions) >= limitation
+  )
+  SELECT
+      brt.ymd AS ymd,
+      brand.name as brand_name,
+      coalesce(region.name, 'Unknown') as region_name,
+      city.name as city_name,
+      sum(brt.impressions) as total_impressions,
+      sum(brt.clicks) as total_clicks,
+      sum(brt.clicks) / sum(brt.impressions) as ctr
+  FROM public.agg_daily brt
+  JOIN region_threshold rt ON brt.region_id = rt.region_id
+  LEFT JOIN public.brand brand ON brt.brand_id = brand.id
+  LEFT JOIN public.city city ON brt.city_id = city.id
+  LEFT JOIN public.region region ON rt.region_id = region.id
+  WHERE
+      brt.ymd >= current_date - interval '7 days'
+      AND brt.brand_id in (
+        SELECT DISTINCT id
+        FROM brand
+        WHERE name like '%abc%'
+      )
+  GROUP BY
+      brt.ymd,
+      brand.name,
+      region_name,
+      city.name
+  ORDER BY brt.ymd ASC","[""catalog.public.agg_daily as brt"", ""catalog.public.city as city"", ""catalog.public.brand as brand"", ""catalog.public.brand as brand"", ""catalog.public.region as region""]","[""brand.id"", ""brand.name"", ""brt.clicks"", ""brt.impressions"", ""brt.region_id"", ""brt.ymd"", ""city.name"", ""region.name""]","[""brand.id"", ""brt.brand_id"", ""brt.city_id"", ""brt.region_id"", ""city.id"", ""region.id""]","[""brand.name"", ""brt.brand_id"", ""brt.ymd""]","[""brand.name"", ""brt.region_id"", ""brt.ymd"", ""city.name"", ""region.name""]"
+"WITH region_spend AS (
+          SELECT region_id, SUM(spend) AS total_spend
+          FROM public.agg_hourly
+          GROUP BY region_id
+      )
+      SELECT r.name, rs.total_spend
+      FROM public.region r
+      JOIN region_spend rs ON r.id = rs.region_id
+      WHERE rs.total_spend > (SELECT AVG(total_spend) FROM region_spend);","[""catalog.public.agg_hourly as agg_hourly"", ""catalog.public.region as r""]","[""agg_hourly.region_id"", ""agg_hourly.spend"", ""r.name""]","[""r.id""]",,"[""agg_hourly.region_id""]"
+"SELECT
+              brt.ymd,
+              r.name AS region_name,
+              b.name AS brand_name,
+              os.name AS operating_system,
+              br.name AS browser_name,
+              SUM(brt.impressions) AS total_impressions,
+              SUM(brt.clicks) AS total_clicks,
+              AVG(brt.views) AS avg_views,
+              SUM(brt.conversions) AS total_conversions,
+              SUM(brt.spend) AS total_spend,
+              (SUM(brt.clicks) / NULLIF(SUM(brt.impressions), 0)) * 100 AS click_through_rate_percentage
+          FROM public.agg_daily brt
+          JOIN public.region r ON brt.region_id = r.id
+          JOIN public.brand b ON brt.brand_id = b.id
+          JOIN public.browser br ON brt.browser_id = br.id
+          JOIN public.operating_system os ON brt.os_id = os.id
+          GROUP BY brt.ymd, r.name, b.name, os.name, br.name
+          ORDER BY brt.ymd, total_impressions DESC;","[""catalog.public.operating_system as os"", ""catalog.public.browser as br"", ""catalog.public.agg_daily as brt"", ""catalog.public.region as r"", ""catalog.public.brand as b""]","[""b.name"", ""br.name"", ""brt.clicks"", ""brt.conversions"", ""brt.impressions"", ""brt.spend"", ""brt.views"", ""brt.ymd"", ""os.name"", ""r.name""]","[""b.id"", ""br.id"", ""brt.brand_id"", ""brt.browser_id"", ""brt.os_id"", ""brt.region_id"", ""os.id"", ""r.id""]",,"[""b.name"", ""br.name"", ""brt.ymd"", ""os.name"", ""r.name""]"
+"WITH daily_impressions AS (
+          SELECT ymd, SUM(impressions) AS total_impressions
+          FROM public.agg_daily
+          GROUP BY ymd
+      ),
+      daily_clicks AS (
+          SELECT ymd, SUM(clicks) AS total_clicks
+          FROM public.agg_daily
+          GROUP BY ymd
+      )
+      SELECT di.ymd, di.total_impressions, dc.total_clicks
+      FROM daily_impressions di
+      JOIN daily_clicks dc ON di.ymd = dc.ymd;","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.clicks"", ""agg_daily.impressions"", ""agg_daily.ymd""]",,,"[""agg_daily.ymd""]"
+"WITH top_brands AS (
+          SELECT brand_id
+          FROM public.agg_hourly
+          GROUP BY brand_id
+          ORDER BY SUM(conversions) DESC
+          LIMIT 5
+      )
+      SELECT b.name, AVG(srt.spend) AS avg_spend
+      FROM public.brand b
+      JOIN top_brands tb ON b.id = tb.brand_id
+      JOIN (SELECT brand_id, spend FROM public.agg_hourly) srt ON b.id = srt.brand_id
+      GROUP BY b.name;","[""catalog.public.agg_hourly as agg_hourly"", ""catalog.public.brand as b""]","[""agg_hourly.brand_id"", ""agg_hourly.spend"", ""b.name""]","[""b.id""]",,"[""agg_hourly.brand_id"", ""b.name""]"
+"WITH filtered_data AS (
+          SELECT *
+          FROM public.agg_daily
+          WHERE ymd BETWEEN '2023-01-01' AND '2023-06-30'
+      )
+      SELECT
+          (SELECT SUM(impressions) FROM filtered_data) AS total_impressions,
+          (SELECT SUM(clicks) FROM filtered_data) AS total_clicks;","[""catalog.public.agg_daily as agg_daily""]",,,"[""agg_daily.ymd""]",
+"SELECT ymd, city_id, region_id, brand_id, browser_id, os_id, sum(impressions) as impressions, sum(clicks) as clicks, sum(views) as views, sum(conversions) as conversions, sum(spend) as spend, sum(spend)/sum(conversions) as spend_per_conversion from public.agg_daily group by ymd, city_id, region_id, brand_id, browser_id, os_id","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.brand_id"", ""agg_daily.browser_id"", ""agg_daily.city_id"", ""agg_daily.clicks"", ""agg_daily.conversions"", ""agg_daily.impressions"", ""agg_daily.os_id"", ""agg_daily.region_id"", ""agg_daily.spend"", ""agg_daily.views"", ""agg_daily.ymd""]",,,"[""agg_daily.brand_id"", ""agg_daily.browser_id"", ""agg_daily.city_id"", ""agg_daily.os_id"", ""agg_daily.region_id"", ""agg_daily.ymd""]"
+"SELECT b.name, SUM(srt.conversions) AS total_conversions
+  FROM public.agg_monthly srt
+  JOIN public.brand b ON srt.brand_id = b.id
+  WHERE srt.conversions > (SELECT 2.0*MIN(conversions) FROM public.agg_monthly)
+  GROUP BY b.name;","[""catalog.public.agg_monthly as srt"", ""catalog.public.brand as b"", ""catalog.public.agg_monthly as agg_monthly""]","[""agg_monthly.conversions"", ""b.name"", ""srt.conversions""]","[""b.id"", ""srt.brand_id""]","[""srt.conversions""]","[""b.name""]"
+"SELECT ymd, city_id, region_id, brand_id, browser_id, os_id, sum(impressions) as impressions, sum(clicks) as clicks, sum(views) as views, sum(conversions) as conversions, sum(spend) as spend from public.agg_daily group by ymd, city_id, region_id, brand_id, browser_id, os_id","[""catalog.public.agg_daily as agg_daily""]","[""agg_daily.brand_id"", ""agg_daily.browser_id"", ""agg_daily.city_id"", ""agg_daily.clicks"", ""agg_daily.conversions"", ""agg_daily.impressions"", ""agg_daily.os_id"", ""agg_daily.region_id"", ""agg_daily.spend"", ""agg_daily.views"", ""agg_daily.ymd""]",,,"[""agg_daily.brand_id"", ""agg_daily.browser_id"", ""agg_daily.city_id"", ""agg_daily.os_id"", ""agg_daily.region_id"", ""agg_daily.ymd""]"
+"COPY INTO public.creative (id, name, brand_id) FROM @my_stage/creative.csv;","[""catalog.public.creative as creative""]",,,,
+"COPY INTO public.browser (id, name) FROM @my_stage/browser.csv;","[""catalog.public.browser as browser""]",,,,
+"COPY INTO public.operating_system (id, name) FROM @my_stage/operating_system.csv;","[""catalog.public.operating_system as operating_system""]",,,,
+"COPY INTO public.brand (id, name, brand_category_id) FROM @my_stage/brand.csv;","[""catalog.public.brand as brand""]",,,,
+"COPY INTO public.brand_category (id, name) FROM @my_stage/brand_category.csv;","[""catalog.public.brand_category as brand_category""]",,,,
+"INSERT INTO public.ad_combined (datetime, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, price, cost, click, view, conversion)
+        SELECT ar.datetime, ar.publisher_id, ar.browser_id, ar.os_id, ar.postal_code, ar.city_id, ar.country_id, aw.creative_id, aw.price, aw.cost,
+            case when ac.ad_request_id is not null then 1 else 0 end as click,
+            case when av.ad_request_id is not null then 1 else 0 end as view,
+            case when acv.ad_request_id is not null then 1 else 0 end as conversion
+        FROM public.ad_request ar
+        LEFT JOIN public.ad_win aw ON ar.ad_request_id = aw.ad_request_id
+        LEFT JOIN public.ad_click ac ON ar.ad_request_id = ac.ad_request_id
+        LEFT JOIN public.ad_view av ON ar.ad_request_id = av.ad_request_id
+        LEFT JOIN public.ad_conversion acv ON ar.ad_request_id = acv.ad_request_id
+        WHERE date(ar.datetime) = '2024-02-16' and hour(ar.datetime) = 9;","[""catalog.public.ad_combined"", ""catalog.public.ad_click as ac"", ""catalog.public.ad_request as ar"", ""catalog.public.ad_win as aw"", ""catalog.public.ad_view as av"", ""catalog.public.ad_conversion as acv""]","[""ac.ad_request_id"", ""acv.ad_request_id"", ""ar.browser_id"", ""ar.city_id"", ""ar.country_id"", ""ar.datetime"", ""ar.os_id"", ""ar.postal_code"", ""ar.publisher_id"", ""av.ad_request_id"", ""aw.cost"", ""aw.creative_id"", ""aw.price""]","[""ac.ad_request_id"", ""acv.ad_request_id"", ""ar.ad_request_id"", ""av.ad_request_id"", ""aw.ad_request_id""]","[""ar.datetime""]",
+"INSERT INTO public.agg_monthly_v2 (ymd, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, impressions, clicks, views, conversions, spend, cost)
+  SELECT ymd, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, sum(impressions), sum(clicks), sum(views), sum(conversions), sum(spend), sum(cost)
+        FROM public.agg_daily ah
+        WHERE ymd = '{month}'
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;","[""catalog.public.agg_monthly_v2"", ""catalog.public.agg_daily as ah""]","[""ah.brand_id"", ""ah.browser_id"", ""ah.city_id"", ""ah.clicks"", ""ah.conversions"", ""ah.cost"", ""ah.country_id"", ""ah.creative_id"", ""ah.impressions"", ""ah.os_id"", ""ah.postal_code"", ""ah.publisher_id"", ""ah.region_id"", ""ah.spend"", ""ah.views"", ""ah.ymd""]",,"[""ah.ymd""]","[""ah.brand_id"", ""ah.browser_id"", ""ah.city_id"", ""ah.country_id"", ""ah.creative_id"", ""ah.os_id"", ""ah.postal_code"", ""ah.publisher_id"", ""ah.region_id"", ""ah.ymd""]"
+"INSERT INTO public.agg_monthly (ymd, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, impressions, clicks, views, conversions, spend, cost)
+  SELECT ymd, publisher_id, browser_id, os_id, postal_code, city_id, region_id, country_id, creative_id, brand_id, sum(impressions), sum(clicks), sum(views), sum(conversions), sum(spend), sum(cost)
+        FROM public.agg_daily ah
+        WHERE ymd = '{month}'
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;","[""catalog.public.agg_monthly"", ""catalog.public.agg_daily as ah""]","[""ah.brand_id"", ""ah.browser_id"", ""ah.city_id"", ""ah.clicks"", ""ah.conversions"", ""ah.cost"", ""ah.country_id"", ""ah.creative_id"", ""ah.impressions"", ""ah.os_id"", ""ah.postal_code"", ""ah.publisher_id"", ""ah.region_id"", ""ah.spend"", ""ah.views"", ""ah.ymd""]",,"[""ah.ymd""]","[""ah.brand_id"", ""ah.browser_id"", ""ah.city_id"", ""ah.country_id"", ""ah.creative_id"", ""ah.os_id"", ""ah.postal_code"", ""ah.publisher_id"", ""ah.region_id"", ""ah.ymd""]"
+SELECT * FROM public.agg_hourly WHERE ymd = '2024-02-16' AND hour = 9;,"[""catalog.public.agg_hourly as agg_hourly""]","[""agg_hourly.brand_id"", ""agg_hourly.browser_id"", ""agg_hourly.city_id"", ""agg_hourly.clicks"", ""agg_hourly.conversions"", ""agg_hourly.cost"", ""agg_hourly.country_id"", ""agg_hourly.creative_id"", ""agg_hourly.hour"", ""agg_hourly.impressions"", ""agg_hourly.os_id"", ""agg_hourly.postal_code"", ""agg_hourly.publisher_id"", ""agg_hourly.region_id"", ""agg_hourly.spend"", ""agg_hourly.views"", ""agg_hourly.ymd""]",,"[""agg_hourly.hour"", ""agg_hourly.ymd""]",
