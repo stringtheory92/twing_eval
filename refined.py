@@ -45,8 +45,10 @@ def replace_table_aliases(row):
         if len(parts) == 2:
             table_name = parts[0]
             table_alias = parts[1]
-        else:
+        elif len(parts) > 2:
             print(f"Unexpected format in 'tables' column: {table}")
+        else:
+            print(f"No alias found for {table}")
 
         if table_name is not None and table_alias is not None:
 
@@ -82,15 +84,17 @@ def replace_table_aliases(row):
     return row
 
 
-def main():
+def revert_aliases():
 
-    csv_filename = "query_analysis_data.csv"
+    csv_filename = "query_analysis_data_v2.csv"
     data = load_csv(csv_filename)
 
     data = data.apply(replace_table_aliases, axis=1)
+
+    data.to_csv("output.csv", index=False)
 
     return data
 
 
 if __name__ == "__main__":
-    main()
+    revert_aliases()

@@ -1,4 +1,4 @@
-from refined import main as transform_data
+from refined import revert_aliases
 import pandas as pd
 import ast
 import json
@@ -30,9 +30,13 @@ def unique_tables(data):
             parts = table.split(" as ")
             if len(parts) == 2:
                 table_name = parts[0]
-            else:
-                print(f"Unexpected format in 'tables' column: {table}")
+            elif len(parts) == 1:
+                print(f"(tables_columns.py) No alias found: {table}")
                 table_name = table
+            else:
+                print(
+                    f"(tables_columns.py) Unexpected format in 'tables' column: {table}"
+                )
             unique_tables.add(table_name)
     return unique_tables
 
@@ -89,7 +93,7 @@ def create_columns_dataset(data):
 
 
 def main():
-    refined_data = transform_data()
+    refined_data = revert_aliases()
     columns_dataset = create_columns_dataset(refined_data)
 
     print("Columns Dataset:")
