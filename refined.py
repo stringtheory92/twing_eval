@@ -57,6 +57,8 @@ def replace_table_aliases(row):
                 "join_columns",
                 "where_columns",
                 "agg_columns",
+                "update_columns",
+                "insert_columns",
             ]
 
             for col in columns_to_replace:
@@ -84,17 +86,17 @@ def replace_table_aliases(row):
     return row
 
 
-def revert_aliases():
+def main():
 
     csv_filename = "query_analysis_data_v2.csv"
     data = load_csv(csv_filename)
 
     data = data.apply(replace_table_aliases, axis=1)
 
-    data.to_csv("output.csv", index=False)
+    data.to_csv("refined.csv", index=False)
 
     return data
 
 
 if __name__ == "__main__":
-    revert_aliases()
+    main()

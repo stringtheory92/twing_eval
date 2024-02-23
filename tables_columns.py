@@ -1,4 +1,4 @@
-from refined import revert_aliases
+from refined import main as revert_aliases
 import pandas as pd
 import ast
 import json
@@ -15,6 +15,8 @@ def extract_columns(row):
         "join_columns",
         "where_columns",
         "agg_columns",
+        "update_columns",
+        "insert_columns",
     ]
     for col in columns_to_extract:
         if isinstance(row[col], list):
@@ -47,6 +49,8 @@ def generate_columns_per_table_dict(data, unique_tables):
         "join_columns",
         "where_columns",
         "agg_columns",
+        "update_columns",
+        "insert_columns",
     ]
 
     table_columns = {table: set() for table in unique_tables}
@@ -95,6 +99,8 @@ def create_columns_dataset(data):
 def main():
     refined_data = revert_aliases()
     columns_dataset = create_columns_dataset(refined_data)
+
+    columns_dataset.to_csv("tables_columns.csv", index=False)
 
     print("Columns Dataset:")
     print(columns_dataset)
