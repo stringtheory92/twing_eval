@@ -104,6 +104,7 @@ def main():
 
     print("Columns Dataset:")
     print(columns_dataset)
+    return columns_dataset
 
 
 if __name__ == "__main__":

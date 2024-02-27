@@ -1,3 +1,5 @@
+# 1/27: Currently the script takes a sql query string and returns a list of tables used in the FROM clause and their aliases. If the FROM contains subqueries, it replaces each subquery with the table used in the subquery and then runs the usual operation.
+
 import re
 import pandas as pd
 
@@ -74,7 +76,7 @@ def main():
         finds [(subquery_start_index, subquery_end_index, table_name_index, alias_name_index)]
         replaces subquery with subquery_table_name and alias_name
         calls extract_from_clause_no_subquery with altered query
-        returns tables and their aliases
+        Returns Table/Alias DF
         """
         subquery_ranges = []
         table_index = None
@@ -89,7 +91,7 @@ def main():
                 if part.upper() == "FROM":
                     print("table_index: ", i)
                     table_index = i + 1
-
+                # in case of nesting, make sure we're out of the subquery before detecting the alias
                 if "(" in part:
                     open_paren_count += part.count("(")
                 if ")" in part:
