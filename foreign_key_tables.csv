@@ -1,18 +1,18 @@
 table,columns,foreign_key_tables
-catalog.public.brand,"['brand_category_id', 'name', 'id']",['brand_category']
-catalog.public.ad_combined,"['creative_id', 'price', 'region_id', 'browser_id', 'conversion', 'view', 'click', 'os_id', 'publisher_id', 'cost', 'postal_code', 'datetime', 'country_id', 'city_id']","['creative', 'city', 'region', 'browser']"
+catalog.public.ad_combined,"['postal_code', 'view', 'country_id', 'click', 'os_id', 'publisher_id', 'region_id', 'creative_id', 'cost', 'browser_id', 'price', 'city_id', 'datetime', 'conversion']","['browser', 'city', 'creative', 'region']"
+catalog.public.agg_daily,"['postal_code', 'conversions', 'views', 'os_id', 'country_id', 'publisher_id', 'region_id', 'impressions', 'ymd', 'spend', 'creative_id', 'clicks', 'cost', 'browser_id', 'city_id', 'brand_id']","['browser', 'city', 'brand', 'creative', 'region']"
 catalog.public.ad_view,"['ad_request_id', 'datetime']",['ad_request']
-catalog.public.creative,"['brand_id', 'name', 'id']",['brand']
-catalog.public.city,"['name', 'id']",[]
-catalog.public.operating_system,"['name', 'id']",[]
-catalog.public.ad_request,"['ad_request_id', 'region_id', 'browser_id', 'os_id', 'publisher_id', 'postal_code', 'datetime', 'country_id', 'city_id']","['city', 'ad_request', 'region', 'browser']"
-catalog.public.agg_daily,"['creative_id', 'clicks', 'views', 'spend', 'region_id', 'browser_id', 'conversions', 'os_id', 'publisher_id', 'cost', 'postal_code', 'brand_id', 'country_id', 'city_id', 'impressions', 'ymd']","['brand', 'creative', 'city', 'region', 'browser']"
-catalog.public.region,"['name', 'id']",[]
-catalog.public.agg_hourly,"['creative_id', 'clicks', 'views', 'region_id', 'spend', 'browser_id', 'conversions', 'os_id', 'publisher_id', 'cost', 'hour', 'postal_code', 'impressions', 'brand_id', 'country_id', 'city_id', 'ymd']","['brand', 'creative', 'city', 'region', 'browser']"
-catalog.public.ad_click,"['ad_request_id', 'datetime']",['ad_request']
-catalog.public.brand_category,"['name', 'id']",[]
-catalog.public.browser,"['name', 'id']",[]
-catalog.public.agg_monthly_v2,"['creative_id', 'clicks', 'views', 'region_id', 'spend', 'browser_id', 'conversions', 'os_id', 'publisher_id', 'cost', 'postal_code', 'impressions', 'brand_id', 'country_id', 'city_id', 'ymd']","['brand', 'creative', 'city', 'region', 'browser']"
+catalog.public.browser,"['id', 'name']",[]
+catalog.public.ad_win,"['creative_id', 'ad_request_id', 'cost', 'price', 'datetime']","['ad_request', 'creative']"
+catalog.public.city,"['id', 'name']",[]
+catalog.public.brand_category,"['id', 'name']",[]
+catalog.public.agg_monthly_v2,"['postal_code', 'conversions', 'views', 'country_id', 'os_id', 'publisher_id', 'impressions', 'region_id', 'ymd', 'spend', 'creative_id', 'clicks', 'cost', 'browser_id', 'city_id', 'brand_id']","['browser', 'city', 'brand', 'creative', 'region']"
+catalog.public.brand,"['id', 'name', 'brand_category_id']",['brand_category']
+catalog.public.operating_system,"['id', 'name']",[]
+catalog.public.agg_monthly,"['postal_code', 'conversions', 'views', 'country_id', 'os_id', 'publisher_id', 'impressions', 'region_id', 'ymd', 'spend', 'creative_id', 'clicks', 'cost', 'browser_id', 'city_id', 'brand_id']","['browser', 'city', 'brand', 'creative', 'region']"
+catalog.public.ad_request,"['postal_code', 'os_id', 'country_id', 'publisher_id', 'region_id', 'ad_request_id', 'browser_id', 'city_id', 'datetime']","['browser', 'city', 'ad_request', 'region']"
 catalog.public.ad_conversion,"['ad_request_id', 'datetime']",['ad_request']
-catalog.public.agg_monthly,"['creative_id', 'clicks', 'views', 'spend', 'region_id', 'browser_id', 'conversions', 'os_id', 'publisher_id', 'cost', 'postal_code', 'brand_id', 'country_id', 'city_id', 'impressions', 'ymd']","['brand', 'creative', 'city', 'region', 'browser']"
-catalog.public.ad_win,"['creative_id', 'ad_request_id', 'price', 'cost', 'datetime']","['creative', 'ad_request']"
+catalog.public.ad_click,"['ad_request_id', 'datetime']",['ad_request']
+catalog.public.creative,"['id', 'brand_id', 'name']",['brand']
+catalog.public.agg_hourly,"['postal_code', 'conversions', 'views', 'country_id', 'os_id', 'publisher_id', 'impressions', 'region_id', 'ymd', 'spend', 'creative_id', 'clicks', 'cost', 'browser_id', 'city_id', 'brand_id', 'hour']","['browser', 'city', 'brand', 'creative', 'region']"
+catalog.public.region,"['id', 'name']",[]
