@@ -1,6 +1,8 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from tables_columns import main as tables_columns_table
+from utils import visualize_sim_ratio_bins
 
 
 data = tables_columns_table()
@@ -106,6 +108,21 @@ def add_column_overlap_column(data):
     result = pd.DataFrame(rows)
     result.to_csv("overlap_data.csv", index=False)
     print(result)
+
+    # create sim_ratios dataset from mod results
+    sim_ratios = pd.DataFrame({"table": result["table"]})
+    print("rt: ", result["table"])
+
+    for col in result.columns:
+        if col.endswith("_sim_ratio"):
+            other_table_name = col.split("_sim_ratio")[0]
+            # print("table_name: ", table_name)
+            sim_ratios[other_table_name] = result[col]
+
+    print("new: ", sim_ratios)
+    sim_ratios.to_csv("sim_ratios.csv", index=False)
+
+    visualize_sim_ratio_bins(sim_ratios)
 
 
 # Hard-coded table grouping
