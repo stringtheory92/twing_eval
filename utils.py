@@ -109,29 +109,55 @@ def create_sim_ratio_bins_dataset(df):
     # count [ tables ] per bin
     bins_count_df = pd.DataFrame(bins_df)
 
-    # Iterate over each column (except 'table')
     for col in bins_count_df.columns:
-        # Skip the 'table' column
         if col == "table":
             continue
 
-        # Initialize a list to store counts for each bin
         bin_counts = []
 
-        # Iterate over each bin
         for i in range(len(bins_count_df)):
-            # Get the list of tables for the current bin
             tables = bins_count_df[col][i]
 
-            # Count the number of tables in the bin
             count = len(tables)
 
-            # Append the count to the list
             bin_counts.append(count)
 
-        # Replace the list in the DataFrame with the counts
         bins_count_df[col] = bin_counts
     bins_count_df.to_csv("bins_count_df.csv", index=False)
-    # print("bcdf: ", bins_count_df)
 
-    return bins_count_df
+    return bins_df, bins_count_df
+
+
+def create_similar_tables_data(df, bins_data, threshold):
+    print("bins_data: ", bins_data)
+    bins = [i / 10 for i in range(11) if (i / 10) >= threshold]
+
+    result = pd.DataFrame(columns=bins)
+    result["table"] = df["table"]
+    for col in result.columns:
+        if col != "table":
+            result[col] = [[] for _ in range(len(result))]
+
+    # IN PROGRESS ============
+    # for i, table in enumerate(df["table"]):
+    #     for j, other_table in enumerate(df["table"]):
+    #         other_table_sim_ratio = df.at[i, f"{other_table}_sim_ratio"]
+
+    #         for k in range(len(bins) - 1):
+    #             if (
+    #                 # could either check for null or if table = other_table
+    #                 not pd.isnull(other_table_sim_ratio)
+    #             ):
+    #                 if k < (len(bins) - 1):
+    #                     if threshold <= other_table_sim_ratio < bins[k + 1]:
+    #                         result.at[i, bins[k]].append(other_table)
+    #                 else:
+    #                     if threshold <= other_table_sim_ratio:
+    #                         result.at[i, bins[k]].append(other_table)
+
+    #         print("ratios: ", table, other_table, other_table_sim_ratio)
+
+    result = result[["table"] + [bin_val for bin_val in bins[:-1]]]
+    result.to_csv("result.csv", index=False)
+    # print("result: ", result)
+    return result

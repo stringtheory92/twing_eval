@@ -6,6 +6,7 @@ from utils import (
     visualize_sim_ratio_bins,
     create_sim_ratio_bins_dataset,
     calculate_similarity_threshold,
+    create_similar_tables_data,
 )
 
 
@@ -109,28 +110,32 @@ def add_column_overlap_column(data):
 
         rows.append(row)
 
-    result = pd.DataFrame(rows)
-    result.to_csv("overlap_data.csv", index=False)
-    print(result)
+    overlap_data = pd.DataFrame(rows)
+    overlap_data.to_csv("overlap_data.csv", index=False)
+    print(overlap_data)
 
     # create sim_ratios dataset from mod results
-    sim_ratios = pd.DataFrame({"table": result["table"]})
-    print("rt: ", result["table"])
+    sim_ratios = pd.DataFrame({"table": overlap_data["table"]})
+    print("rt: ", overlap_data["table"])
 
-    for col in result.columns:
+    for col in overlap_data.columns:
         if col.endswith("_sim_ratio"):
             other_table_name = col.split("_sim_ratio")[0]
             # print("table_name: ", table_name)
-            sim_ratios[other_table_name] = result[col]
+            sim_ratios[other_table_name] = overlap_data[col]
 
     print("new: ", sim_ratios)
     sim_ratios.to_csv("sim_ratios.csv", index=False)
 
-    sim_ratio_bins_data = create_sim_ratio_bins_dataset(sim_ratios)
+    sim_ratio_bins_data, bins_count_data = create_sim_ratio_bins_dataset(sim_ratios)
     # visualize_sim_ratio_bins(sim_ratio_bins_data)
-    threshold = calculate_similarity_threshold(sim_ratio_bins_data)
+    threshold = calculate_similarity_threshold(bins_count_data)
 
-    print("calc_sim_data: ", threshold)
+    sim_tables_data = create_similar_tables_data(
+        overlap_data, sim_ratio_bins_data, threshold
+    )
+
+    print("calc_sim_data: ", sim_tables_data)
 
 
 # Hard-coded table grouping
