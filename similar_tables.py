@@ -1,6 +1,4 @@
 import pandas as pd
-from pandasql import sqldf
-import ast
 
 from tables_columns import main as tables_columns_table
 
@@ -41,9 +39,79 @@ def add_foreign_key_tables_column(data):
     return data
 
 
+def add_column_overlap_column(data):
+    """
+    Create dataset:
+
+    | Table       | Columns                                                                 | ad_combined_overlap | ad_combined_sim_ratio | agg_daily_overlap | agg_daily_sim_ratio | ad_view_overlap | ad_view_sim_ratio | browser_overlap | browser_sim_ratio | ad_win_overlap | ad_win_sim_ratio | city_overlap | city_sim_ratio | brand_category_overlap | brand_category_sim_ratio | agg_monthly_v2_overlap | agg_monthly_v2_sim_ratio | brand_overlap | brand_sim_ratio | operating_system_overlap | operating_system_sim_ratio | agg_monthly_overlap | agg_monthly_sim_ratio | ad_request_overlap | ad_request_sim_ratio | ad_conversion_overlap | ad_conversion_sim_ratio | ad_click_overlap | ad_click_sim_ratio | creative_overlap | creative_sim_ratio | agg_hourly_overlap | agg_hourly_sim_ratio | region_overlap | region_sim_ratio |
+    |-------------|-------------------------------------------------------------------------|---------------------|-----------------------|-------------------|---------------------|-----------------|-------------------|-----------------|-------------------|----------------|------------------|--------------|----------------|------------------------|--------------------------|------------------------|--------------------------|---------------|-----------------|--------------------------|----------------------------|---------------------|-----------------------|--------------------|----------------------|-----------------------|-------------------------|------------------|--------------------|------------------|--------------------|--------------------|----------------------|----------------|------------------|
+    | ad_combined | ['postal_code', 'view', 'country_id', 'click', 'os_id']                 |
+    | agg_daily   | ['postal_code', 'conversions', 'views', 'os_id', 'country_id']          |
+    | ad_view     | ['ad_request_id', 'datetime']                                           |
+    | browser     | ['id', 'name']                                                          |
+    | ad_win      | ['creative_id', 'ad_request_id', 'cost', 'price', 'datetime']           |
+
+    Rows: {table_name}
+    Cols: {other_table_name}_overlap | {other_table_name}_sim_ratio
+
+    Similarity will include PK/FK
+    """
+
+    modified_data = data.copy()
+
+    # shorten table names for convenience
+    # reconcile pk/fk col and ambiguous col names
+    for index, row in modified_data.iterrows():
+        table = row["table"].split(".")[-1]
+        modified_data.at[index, "table"] = table
+        for i, col in enumerate(row["columns"]):
+            if table == "operating_system" and col == "id":
+                modified_data.at[index, "columns"][i] = "os_id"
+            elif col == "id":
+                modified_data.at[index, "columns"][i] = f"{table}_id"
+            elif col == "name":
+                modified_data.at[index, "columns"][i] = f"{table}_name"
+
+    print("new data: ", modified_data)
+
+    # create new dataset
+    rows = []
+    tables = modified_data["table"].to_list()
+
+    for table in tables:
+        row = {
+            "table": table,
+            "columns": modified_data.loc[
+                modified_data["table"] == table, "columns"
+            ].iloc[0],
+        }
+
+        for other_table in tables:
+            if table == other_table:
+                continue
+
+            cols = row["columns"]
+            other_cols = modified_data.loc[
+                modified_data["table"] == other_table, "columns"
+            ].iloc[0]
+
+            overlap_cols = [col for col in cols if col in other_cols]
+            sim_ratio = len(overlap_cols) / len(cols)
+
+            row[f"{other_table}_overlap"] = overlap_cols
+            row[f"{other_table}_sim_ratio"] = sim_ratio
+
+        rows.append(row)
+
+    result = pd.DataFrame(rows)
+    result.to_csv("overlap_data.csv", index=False)
+    print(result)
+
+
+# Hard-coded table grouping
 def table_groups(data):
     """
-    Produces lists of tables grouped by various criteria
+    Produces lists of tables grouped by various criteria - Hard coded
     """
     table_col_data = add_foreign_key_tables_column(data)
 
@@ -71,7 +139,7 @@ def table_groups(data):
 
     print("ad tables: ", ad_tables)
 
-    # Agg Tables
+    # AGG TABLES
     agg_tables = []
     for _, row in table_col_data.iterrows():
         table = row["table"]
@@ -93,4 +161,5 @@ def table_groups(data):
 if __name__ == "__main__":
 
     # add_foreign_key_tables_column(data)
-    table_groups(data)
+    # table_groups(data)
+    add_column_overlap_column(data)
