@@ -2,7 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from tables_columns import main as tables_columns_table
-from utils import visualize_sim_ratio_bins
+from utils import (
+    visualize_sim_ratio_bins,
+    create_sim_ratio_bins_dataset,
+    calculate_similarity_threshold,
+)
 
 
 data = tables_columns_table()
@@ -122,7 +126,11 @@ def add_column_overlap_column(data):
     print("new: ", sim_ratios)
     sim_ratios.to_csv("sim_ratios.csv", index=False)
 
-    visualize_sim_ratio_bins(sim_ratios)
+    sim_ratio_bins_data = create_sim_ratio_bins_dataset(sim_ratios)
+    # visualize_sim_ratio_bins(sim_ratio_bins_data)
+    threshold = calculate_similarity_threshold(sim_ratio_bins_data)
+
+    print("calc_sim_data: ", threshold)
 
 
 # Hard-coded table grouping

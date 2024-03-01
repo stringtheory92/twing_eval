@@ -2,9 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def visualize_sim_ratio_bins(df):
-    bins_df = create_sim_ratio_bins_dataset(df)
-
+def visualize_sim_ratio_bins(bins_df):
     bins = [float(col) for col in bins_df.columns[1:]]
     print("bins: ", bins)
 
@@ -19,9 +17,10 @@ def visualize_sim_ratio_bins(df):
     plt.show()
 
 
-def calculate_similarity(df):
+def calculate_similarity_threshold(bins_df):
     """
     Based on column overlap distribution of current dataset:
+    bin    count(bin)
     0.0    28
     0.1    12
     0.2     6
@@ -48,6 +47,15 @@ def calculate_similarity(df):
 
     0.6 is the threshold, therefore all tables contained in buckets 0.6 and greater are similar
     """
+    bin_sums = bins_df.sum(axis=0)[1:]
+    bin_sums_df = pd.DataFrame(bin_sums).reset_index()
+    bin_sums_df.columns = ["bin", "count"]
+    bin_sums_df["percent_change"] = bin_sums_df["count"].pct_change()
+
+    min_percent_change_idx = bin_sums_df["percent_change"].idxmin()
+    threshold = bin_sums_df.loc[min_percent_change_idx, "bin"]
+
+    return threshold
 
 
 def create_sim_ratio_bins_dataset(df):
