@@ -103,7 +103,7 @@ def add_column_overlap_column(data):
             ].iloc[0]
 
             overlap_cols = [col for col in cols if col in other_cols]
-            sim_ratio = len(overlap_cols) / len(cols)
+            sim_ratio = (len(overlap_cols) * 2) / (len(cols) + len(other_cols))
 
             row[f"{other_table}_overlap"] = overlap_cols
             row[f"{other_table}_sim_ratio"] = sim_ratio

@@ -1,18 +1,18 @@
-table,0.6,0.7,0.8,0.9
-region,[],[],[],[]
-operating_system,[],[],[],[]
-ad_request,[],"['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'ad_combined', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'ad_combined', 'agg_monthly_v2']"
-ad_win,[],[],['ad_combined'],['ad_combined']
-agg_monthly,[],[],[],[]
-brand_category,[],[],[],[]
-agg_hourly,[],[],[],"['agg_monthly', 'agg_daily', 'agg_monthly_v2']"
-agg_daily,[],[],[],[]
-ad_view,[],[],[],[]
-ad_combined,"['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']"
-ad_conversion,[],[],[],[]
-city,[],[],[],[]
-creative,"['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']","['agg_monthly', 'agg_hourly', 'agg_daily', 'agg_monthly_v2']"
-agg_monthly_v2,[],[],[],[]
-ad_click,[],[],[],[]
-browser,[],[],[],[]
-brand,[],[],[],[]
+table,0.7,0.8,0.9
+agg_monthly,[],[],[]
+agg_daily,[],[],[]
+ad_combined,[],[],[]
+creative,[],[],[]
+ad_click,[],[],[]
+agg_monthly_v2,[],[],[]
+region,[],[],[]
+ad_view,[],[],[]
+city,[],[],[]
+agg_hourly,[],[],[]
+ad_conversion,[],[],[]
+brand,[],[],[]
+ad_request,[],[],[]
+ad_win,[],[],[]
+browser,[],[],[]
+operating_system,[],[],[]
+brand_category,[],[],[]
