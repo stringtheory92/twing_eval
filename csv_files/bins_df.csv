@@ -1,0 +1,18 @@
+table,0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9
+ad_conversion,[],['ad_combined'],[],['ad_request'],[],['ad_win'],[],[],[],[]
+operating_system,[],"['ad_request', 'agg_hourly', 'agg_daily', 'agg_monthly_v2', 'ad_combined', 'agg_monthly']",[],[],[],[],[],[],[],[]
+ad_request,[],"['operating_system', 'city', 'browser', 'region']",['ad_win'],"['ad_view', 'ad_click', 'ad_conversion']",[],"['agg_hourly', 'agg_daily', 'agg_monthly_v2', 'agg_monthly']",['ad_combined'],[],[],[]
+city,[],"['ad_request', 'agg_hourly', 'agg_daily', 'agg_monthly_v2', 'ad_combined', 'agg_monthly']",[],[],[],[],[],[],[],[]
+agg_hourly,[],"['operating_system', 'city', 'brand', 'browser', 'ad_win', 'region']",['creative'],[],[],"['ad_request', 'ad_combined']",[],[],[],"['agg_daily', 'agg_monthly_v2', 'agg_monthly']"
+ad_view,[],['ad_combined'],[],['ad_request'],[],['ad_win'],[],[],[],[]
+brand,[],"['agg_hourly', 'agg_daily', 'agg_monthly_v2', 'agg_monthly']",[],['creative'],['brand_category'],[],[],[],[],[]
+browser,[],"['ad_request', 'agg_hourly', 'agg_daily', 'agg_monthly_v2', 'ad_combined', 'agg_monthly']",[],[],[],[],[],[],[],[]
+ad_win,[],"['agg_hourly', 'agg_daily', 'agg_monthly_v2', 'agg_monthly']","['ad_request', 'creative']",[],['ad_combined'],"['ad_view', 'ad_click', 'ad_conversion']",[],[],[],[]
+agg_daily,[],"['operating_system', 'city', 'brand', 'browser', 'ad_win', 'region']",['creative'],[],[],['ad_request'],['ad_combined'],[],[],['agg_hourly']
+region,[],"['ad_request', 'agg_hourly', 'agg_daily', 'agg_monthly_v2', 'ad_combined', 'agg_monthly']",[],[],[],[],[],[],[],[]
+agg_monthly_v2,[],"['operating_system', 'city', 'brand', 'browser', 'ad_win', 'region']",['creative'],[],[],['ad_request'],['ad_combined'],[],[],['agg_hourly']
+ad_click,[],['ad_combined'],[],['ad_request'],[],['ad_win'],[],[],[],[]
+creative,[],['ad_combined'],"['agg_hourly', 'ad_win', 'agg_daily', 'agg_monthly_v2', 'agg_monthly']",['brand'],[],[],[],[],[],[]
+ad_combined,[],"['operating_system', 'city', 'ad_view', 'browser', 'region', 'ad_click', 'creative', 'ad_conversion']",[],[],['ad_win'],['agg_hourly'],"['ad_request', 'agg_daily', 'agg_monthly_v2', 'agg_monthly']",[],[],[]
+brand_category,[],[],[],[],['brand'],[],[],[],[],[]
+agg_monthly,[],"['operating_system', 'city', 'brand', 'browser', 'ad_win', 'region']",['creative'],[],[],['ad_request'],['ad_combined'],[],[],['agg_hourly']

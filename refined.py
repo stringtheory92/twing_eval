@@ -93,7 +93,7 @@ def main():
 
     data = data.apply(replace_table_aliases, axis=1)
 
-    data.to_csv("refined.csv", index=False)
+    data.to_csv("csv_files/refined.csv", index=False)
 
     return data
 

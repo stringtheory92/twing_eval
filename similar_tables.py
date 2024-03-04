@@ -13,40 +13,7 @@ from utils import (
 data = tables_columns_table()
 
 
-def add_foreign_key_tables_column(data):
-    """
-    Based on naming convention [table].id => table_2.[table]_id
-    Returns tables_columns_table with additional column
-    """
-    foreign_key_tables_list = []
-
-    for _, row in data.iterrows():
-        potential_foreign_tables = set()
-        confirmed_foreign_tables = []
-
-        for column in row["columns"]:
-            if column.endswith("_id"):
-                potential_foreign_table = column[:-3]
-                potential_foreign_tables.add(potential_foreign_table)
-
-        for _, other_row in data.iterrows():
-            # toggle full table paths or only names
-            full_table_name = other_row["table"]
-            table_name = other_row["table"].split(".")[-1]
-
-            for potential_foreign_table in potential_foreign_tables:
-                if potential_foreign_table == table_name:
-                    confirmed_foreign_tables.append(table_name)
-
-        foreign_key_tables_list.append(confirmed_foreign_tables)
-
-    data["foreign_key_tables"] = [foreign_key_tables_list[i] for i in range(len(data))]
-    data.to_csv("foreign_key_tables.csv", index=False)
-
-    return data
-
-
-def add_column_overlap_column(data):
+def create_col_overlap_data(data):
     """
     Create dataset:
 
@@ -79,8 +46,6 @@ def add_column_overlap_column(data):
             elif col == "name":
                 modified_data.at[index, "columns"][i] = f"{table}_name"
 
-    # print("new data: ", modified_data)
-
     # create new dataset
     rows = []
     tables = modified_data["table"].to_list()
@@ -103,6 +68,7 @@ def add_column_overlap_column(data):
             ].iloc[0]
 
             overlap_cols = [col for col in cols if col in other_cols]
+            # Add additional similarity criteria here
             sim_ratio = (len(overlap_cols) * 2) / (len(cols) + len(other_cols))
 
             row[f"{other_table}_overlap"] = overlap_cols
@@ -111,7 +77,13 @@ def add_column_overlap_column(data):
         rows.append(row)
 
     overlap_data = pd.DataFrame(rows)
-    overlap_data.to_csv("overlap_data.csv", index=False)
+    overlap_data.to_csv("csv_files/overlap_data.csv", index=False)
+
+    return overlap_data
+
+
+def main(data):
+    overlap_data = create_col_overlap_data(data)
 
     # create sim_ratios dataset from mod results
     sim_ratios = pd.DataFrame({"table": overlap_data["table"]})
@@ -134,56 +106,89 @@ def add_column_overlap_column(data):
     print("TABLE GROUPS: ", sim_tables)
 
 
-# Hard-coded table grouping
-def table_groups(data):
-    """
-    Produces lists of tables grouped by various criteria - Hard coded
-    """
-    table_col_data = add_foreign_key_tables_column(data)
-
-    # REFERENCE TABLES
-    reference_tables = []
-    for _, row in table_col_data.iterrows():
-        table = row["table"]
-        columns = row["columns"]
-        fkts = row["foreign_key_tables"]
-
-        if len(fkts) == 0:
-            reference_tables.append(table)
-
-    # AD TABLES
-    ad_tables = []
-    for _, row in table_col_data.iterrows():
-        table = row["table"]
-        columns = row["columns"]
-        fkts = row["foreign_key_tables"]
-
-        if "ad_request_id" in columns:
-            ad_tables.append(table)
-
-    print("ad tables: ", ad_tables)
-
-    # AGG TABLES
-    agg_tables = []
-    for _, row in table_col_data.iterrows():
-        table = row["table"]
-        columns = row["columns"]
-        fkts = row["foreign_key_tables"]
-
-        agg_fkts = {"browser", "region", "city", "brand", "creative"}
-        if len(fkts) == 5:
-            is_agg_table = True
-            for fkt in agg_fkts:
-                if fkt not in fkts:
-                    is_agg_table = False
-            if is_agg_table == True:
-                agg_tables.append(table)
-
-    print("agg tables: ", agg_tables)
-
-
 if __name__ == "__main__":
 
+    main(data)
     # add_foreign_key_tables_column(data)
     # table_groups(data)
-    add_column_overlap_column(data)
+
+
+# def add_foreign_key_tables_column(data):
+#     """
+#     Based on naming convention [table].id => table_2.[table]_id
+#     Returns tables_columns_table with additional column
+#     """
+#     foreign_key_tables_list = []
+
+#     for _, row in data.iterrows():
+#         potential_foreign_tables = set()
+#         confirmed_foreign_tables = []
+
+#         for column in row["columns"]:
+#             if column.endswith("_id"):
+#                 potential_foreign_table = column[:-3]
+#                 potential_foreign_tables.add(potential_foreign_table)
+
+#         for _, other_row in data.iterrows():
+#             # toggle full table paths or only names
+#             full_table_name = other_row["table"]
+#             table_name = other_row["table"].split(".")[-1]
+
+#             for potential_foreign_table in potential_foreign_tables:
+#                 if potential_foreign_table == table_name:
+#                     confirmed_foreign_tables.append(table_name)
+
+#         foreign_key_tables_list.append(confirmed_foreign_tables)
+
+#     data["foreign_key_tables"] = [foreign_key_tables_list[i] for i in range(len(data))]
+#     data.to_csv("csv_files/foreign_key_tables.csv", index=False)
+
+#     return data
+
+
+# Hard-coded table grouping
+# def table_groups(data):
+#     """
+#     Produces lists of tables grouped by various criteria - Hard coded
+#     """
+#     table_col_data = add_foreign_key_tables_column(data)
+
+#     # REFERENCE TABLES
+#     reference_tables = []
+#     for _, row in table_col_data.iterrows():
+#         table = row["table"]
+#         columns = row["columns"]
+#         fkts = row["foreign_key_tables"]
+
+#         if len(fkts) == 0:
+#             reference_tables.append(table)
+
+#     # AD TABLES
+#     ad_tables = []
+#     for _, row in table_col_data.iterrows():
+#         table = row["table"]
+#         columns = row["columns"]
+#         fkts = row["foreign_key_tables"]
+
+#         if "ad_request_id" in columns:
+#             ad_tables.append(table)
+
+#     print("ad tables: ", ad_tables)
+
+#     # AGG TABLES
+#     agg_tables = []
+#     for _, row in table_col_data.iterrows():
+#         table = row["table"]
+#         columns = row["columns"]
+#         fkts = row["foreign_key_tables"]
+
+#         agg_fkts = {"browser", "region", "city", "brand", "creative"}
+#         if len(fkts) == 5:
+#             is_agg_table = True
+#             for fkt in agg_fkts:
+#                 if fkt not in fkts:
+#                     is_agg_table = False
+#             if is_agg_table == True:
+#                 agg_tables.append(table)
+
+#     print("agg tables: ", agg_tables)

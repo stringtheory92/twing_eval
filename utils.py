@@ -102,7 +102,7 @@ def create_sim_ratio_bins_dataset(df):
 
     bins_df = bins_df[["table"] + [bin_val for bin_val in bins[:-1]]]
 
-    bins_df.to_csv("bins_df.csv", index=False)
+    bins_df.to_csv("csv_files/bins_df.csv", index=False)
 
     # count [ tables ] per bin
     bins_count_df = pd.DataFrame(bins_df)
@@ -121,7 +121,7 @@ def create_sim_ratio_bins_dataset(df):
             bin_counts.append(count)
 
         bins_count_df[col] = bin_counts
-    bins_count_df.to_csv("bins_count_df.csv", index=False)
+    bins_count_df.to_csv("csv_files/bins_count_df.csv", index=False)
 
     return bins_df, bins_count_df
 
