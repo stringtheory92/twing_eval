@@ -130,13 +130,31 @@ def create_sim_ratio_bins_dataset(df):
 
 def create_similar_tables_data(df, bins_data, threshold):
     print("bins_data: ", bins_data)
-    bins = [i / 10 for i in range(11) if (i / 10) >= threshold]
+    bins = [i / 10 for i in range(11) if (((i + 1) / 10) >= threshold)]
 
-    result = pd.DataFrame(columns=bins)
-    result["table"] = df["table"]
-    for col in result.columns:
-        if col != "table":
-            result[col] = [[] for _ in range(len(result))]
+    groups = []
+
+    for table in bins_data["table"]:
+        group = set([table])
+        print("table: ", table)
+        for col in bins_data.columns[1:]:  # Exclude the 'table' column
+            if col in bins:
+                print("col: ", col)
+                tables_in_bin = bins_data.loc[bins_data["table"] == table, col].iloc[0]
+                print(
+                    "tables_in_bin: ",
+                    tables_in_bin,
+                )
+                if len(tables_in_bin) > 0:
+                    print("tables_in_bin: ", tables_in_bin)
+                    print("len: ", len(tables_in_bin))
+                    for t in tables_in_bin:
+                        print("t: ", t)
+                        group.add(t)
+        print("group: ", group)
+        groups.append(group)
+
+    print(groups)
 
     # IN PROGRESS ============
     # for i, table in enumerate(df["table"]):
@@ -157,7 +175,7 @@ def create_similar_tables_data(df, bins_data, threshold):
 
     #         print("ratios: ", table, other_table, other_table_sim_ratio)
 
-    result = result[["table"] + [bin_val for bin_val in bins[:-1]]]
-    result.to_csv("result.csv", index=False)
-    # print("result: ", result)
-    return result
+    # result = result[["table"] + [bin_val for bin_val in bins[:-1]]]
+    # result.to_csv("result.csv", index=False)
+    # # print("result: ", result)
+    # return result
