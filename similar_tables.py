@@ -79,7 +79,7 @@ def add_column_overlap_column(data):
             elif col == "name":
                 modified_data.at[index, "columns"][i] = f"{table}_name"
 
-    print("new data: ", modified_data)
+    # print("new data: ", modified_data)
 
     # create new dataset
     rows = []
@@ -112,30 +112,26 @@ def add_column_overlap_column(data):
 
     overlap_data = pd.DataFrame(rows)
     overlap_data.to_csv("overlap_data.csv", index=False)
-    print(overlap_data)
 
     # create sim_ratios dataset from mod results
     sim_ratios = pd.DataFrame({"table": overlap_data["table"]})
-    print("rt: ", overlap_data["table"])
 
     for col in overlap_data.columns:
         if col.endswith("_sim_ratio"):
             other_table_name = col.split("_sim_ratio")[0]
-            # print("table_name: ", table_name)
+
             sim_ratios[other_table_name] = overlap_data[col]
 
-    print("new: ", sim_ratios)
     sim_ratios.to_csv("sim_ratios.csv", index=False)
 
     sim_ratio_bins_data, bins_count_data = create_sim_ratio_bins_dataset(sim_ratios)
     # visualize_sim_ratio_bins(sim_ratio_bins_data)
     threshold = calculate_similarity_threshold(bins_count_data)
 
-    sim_tables_data = create_similar_tables_data(
+    sim_tables = create_similar_tables_data(
         overlap_data, sim_ratio_bins_data, threshold
     )
-
-    print("calc_sim_data: ", sim_tables_data)
+    print("TABLE GROUPS: ", sim_tables)
 
 
 # Hard-coded table grouping
@@ -154,8 +150,6 @@ def table_groups(data):
 
         if len(fkts) == 0:
             reference_tables.append(table)
-
-    print("ref tables: ", reference_tables)
 
     # AD TABLES
     ad_tables = []

@@ -18,8 +18,8 @@ def extract_tables(row):
     tables = ast.literal_eval(row["tables"])
     table_names = []
     aliases = []
-    print("tables: ", tables)
-    print("aliases: ", aliases)
+    # print("tables: ", tables)
+    # print("aliases: ", aliases)
     for table in tables:
         parts = table.split(" as ")
         table_names.append(parts[0])
@@ -45,10 +45,10 @@ def replace_table_aliases(row):
         if len(parts) == 2:
             table_name = parts[0]
             table_alias = parts[1]
-        elif len(parts) > 2:
-            print(f"Unexpected format in 'tables' column: {table}")
-        else:
-            print(f"No alias found for {table}")
+        # elif len(parts) > 2:
+        # print(f"Unexpected format in 'tables' column: {table}")
+        # else:
+        # print(f"No alias found for {table}")
 
         if table_name is not None and table_alias is not None:
 

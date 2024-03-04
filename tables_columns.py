@@ -33,12 +33,12 @@ def unique_tables(data):
             if len(parts) == 2:
                 table_name = parts[0]
             elif len(parts) == 1:
-                print(f"(tables_columns.py) No alias found: {table}")
+                # print(f"(tables_columns.py) No alias found: {table}")
                 table_name = table
-            else:
-                print(
-                    f"(tables_columns.py) Unexpected format in 'tables' column: {table}"
-                )
+            # else:
+            # print(
+            #     f"(tables_columns.py) Unexpected format in 'tables' column: {table}"
+            # )
             unique_tables.add(table_name)
     return unique_tables
 
@@ -102,8 +102,8 @@ def main():
 
     columns_dataset.to_csv("tables_columns.csv", index=False)
 
-    print("Columns Dataset:")
-    print(columns_dataset)
+    # print("Columns Dataset:")
+    # print(columns_dataset)
     return columns_dataset
 
 

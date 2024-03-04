@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 def visualize_sim_ratio_bins(bins_df):
     bins = [float(col) for col in bins_df.columns[1:]]
-    print("bins: ", bins)
 
     bin_sums = bins_df.sum(axis=0)[1:]
 
@@ -67,8 +66,8 @@ def create_sim_ratio_bins_dataset(df):
 
     # [ tables ] per bin
     bins = [i / 10 for i in range(11)]
-    bins_df = pd.DataFrame(columns=bins)
 
+    bins_df = pd.DataFrame(columns=bins)
     bins_df["table"] = df["table"]
 
     for col in bins_df.columns:
@@ -80,7 +79,7 @@ def create_sim_ratio_bins_dataset(df):
 
             if col != "table":
                 sim_ratio = df[df["table"] == table][col].values[0]
-                print("sr: ", table, sim_ratio)
+
                 for i in range(len(bins) - 1):
 
                     # alternate - include 0.0 values in count
@@ -102,7 +101,6 @@ def create_sim_ratio_bins_dataset(df):
                             ].append(col)
 
     bins_df = bins_df[["table"] + [bin_val for bin_val in bins[:-1]]]
-    print("x: ", bins_df)
 
     bins_df.to_csv("bins_df.csv", index=False)
 
@@ -129,53 +127,25 @@ def create_sim_ratio_bins_dataset(df):
 
 
 def create_similar_tables_data(df, bins_data, threshold):
-    print("bins_data: ", bins_data)
+
     bins = [i / 10 for i in range(11) if (((i + 1) / 10) >= threshold)]
 
     groups = []
 
     for table in bins_data["table"]:
         group = set([table])
-        print("table: ", table)
+
         for col in bins_data.columns[1:]:  # Exclude the 'table' column
             if col in bins:
-                print("col: ", col)
+
                 tables_in_bin = bins_data.loc[bins_data["table"] == table, col].iloc[0]
-                print(
-                    "tables_in_bin: ",
-                    tables_in_bin,
-                )
+
                 if len(tables_in_bin) > 0:
-                    print("tables_in_bin: ", tables_in_bin)
-                    print("len: ", len(tables_in_bin))
                     for t in tables_in_bin:
-                        print("t: ", t)
                         group.add(t)
-        print("group: ", group)
+
         groups.append(group)
 
-    print(groups)
+    unique_groups = [set(group) for group in {frozenset(group) for group in groups}]
 
-    # IN PROGRESS ============
-    # for i, table in enumerate(df["table"]):
-    #     for j, other_table in enumerate(df["table"]):
-    #         other_table_sim_ratio = df.at[i, f"{other_table}_sim_ratio"]
-
-    #         for k in range(len(bins) - 1):
-    #             if (
-    #                 # could either check for null or if table = other_table
-    #                 not pd.isnull(other_table_sim_ratio)
-    #             ):
-    #                 if k < (len(bins) - 1):
-    #                     if threshold <= other_table_sim_ratio < bins[k + 1]:
-    #                         result.at[i, bins[k]].append(other_table)
-    #                 else:
-    #                     if threshold <= other_table_sim_ratio:
-    #                         result.at[i, bins[k]].append(other_table)
-
-    #         print("ratios: ", table, other_table, other_table_sim_ratio)
-
-    # result = result[["table"] + [bin_val for bin_val in bins[:-1]]]
-    # result.to_csv("result.csv", index=False)
-    # # print("result: ", result)
-    # return result
+    return unique_groups
